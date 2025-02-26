@@ -29,9 +29,7 @@
         "functions": "never",
         "typeLiterals": "ignore"
       }
-    }]
-
-
+    }],
     "paths": {
       "@/*": ["./src/*"]
     }
