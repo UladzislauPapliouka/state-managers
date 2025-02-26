@@ -1,5 +1,5 @@
 import './App.css';
-import { Center, Tabs } from '@chakra-ui/react';
+import { Box, Tabs, Center } from '@chakra-ui/react';
 import { StateManagers } from '@/constants/state-managers.ts';
 import { NavLink, Outlet, useLocation } from 'react-router';
 
@@ -30,9 +30,9 @@ function App() {
           </Tabs.List>
         </Tabs.Root>
       </Center>
-      <Center bg="bg.emphasized" h="90vh" w="100vw">
+      <Box padding={'20px'} bg="bg.emphasized" h="calc(90vh)" w="calc(100vw)">
         <Outlet />
-      </Center>
+      </Box>
     </>
   );
 }
