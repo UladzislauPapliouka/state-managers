@@ -11,7 +11,7 @@ export const StateManagers: Array<Tab> = [
   },
   {
     name: 'Zustand',
-    disabled: true
+    disabled: false
   },
   {
     name: 'Jotai',
