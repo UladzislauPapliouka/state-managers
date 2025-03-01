@@ -1,0 +1,11 @@
+.buttons {
+    position: relative;
+}
+.buttons > button {
+    right: -120%;
+    overflow: hidden;
+    transition: right 0.3s;
+}
+.buttons:hover > button{
+    right: 0;
+}
