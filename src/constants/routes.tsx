@@ -4,6 +4,7 @@ import { Page404 } from '@/components/Pages/Page404.tsx';
 import { ReduxPage } from '@/components/Pages/redux-page.tsx';
 import { Provider } from 'react-redux';
 import { ReduxStore } from '@/stores/redux';
+import { MobXPage, Todos } from '@/components/Pages/MobXPage';
 export const ROUTES: Array<RouteProps> = [
   { path: '/', element: <Redirect to={'/redux'} /> },
   {
@@ -13,6 +14,10 @@ export const ROUTES: Array<RouteProps> = [
         <ReduxPage />
       </Provider>
     )
+  },
+  {
+    path: 'mobx',
+    element: <MobXPage store={new Todos()} />
   },
   { path: '*', element: <Page404 /> }
 ];

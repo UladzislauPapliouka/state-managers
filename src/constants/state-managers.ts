@@ -7,7 +7,7 @@ export const StateManagers: Array<Tab> = [
   },
   {
     name: 'MobX',
-    disabled: true
+    disabled: false
   },
   {
     name: 'Zustand',

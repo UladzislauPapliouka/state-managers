@@ -1,16 +1,30 @@
 import { VStack, Input, Kbd } from '@chakra-ui/react';
 import { PageLayout } from '@/components/PageLayout.tsx';
-import { Task } from '../Task';
 import { InputGroup } from '../ui/input-group';
 import { Task as TaskType } from '@/types';
+import { ReactNode } from 'react';
 
 type Props = {
   tasks: TaskType[];
   onAdd: (name: string) => void;
   onDelete: (id: string) => void;
   onDone: (id: string) => void;
+  renderToDo: (
+    task: TaskType,
+    onDelete: (id: string) => void,
+    onDone: (id: string) => void,
+    key: string
+  ) => ReactNode;
 };
-export const TodoPage = ({ onAdd, onDelete, onDone, tasks }: Props) => {
+export const TodoPage = ({
+  onAdd,
+  onDelete,
+  onDone,
+  tasks,
+  renderToDo
+}: Props) => {
+  console.log(tasks);
+
   return (
     <PageLayout>
       <VStack>
@@ -24,9 +38,7 @@ export const TodoPage = ({ onAdd, onDelete, onDone, tasks }: Props) => {
             placeholder="Task name..."
           />
         </InputGroup>
-        {tasks.map((task) => (
-          <Task key={task.id} task={task} onDelete={onDelete} onDone={onDone} />
-        ))}
+        {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
       </VStack>
     </PageLayout>
   );
