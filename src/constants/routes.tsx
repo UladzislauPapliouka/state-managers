@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { ReduxStore } from '@/stores/redux';
 import { MobXPage, Todos } from '@/components/Pages/MobXPage';
 import { ZustandPage } from '@/components/Pages/ZustandPage';
+import { JotaiPage } from '@/components/Pages/JotaiPage';
 export const ROUTES: Array<RouteProps> = [
   { path: '/', element: <Redirect to={'/redux'} /> },
   {
@@ -23,6 +24,10 @@ export const ROUTES: Array<RouteProps> = [
   {
     path: 'zustand',
     element: <ZustandPage />
+  },
+  {
+    path: 'jotai',
+    element: <JotaiPage />
   },
   { path: '*', element: <Page404 /> }
 ];
