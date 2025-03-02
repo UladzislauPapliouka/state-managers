@@ -1,19 +1,23 @@
 import { useAppDispatch, useAppSelector } from '@/stores/redux';
-import { addTodo, deleteTodo, toggleStatus } from '@/stores/redux/slices/todos';
+import {
+  addTask,
+  deleteTask,
+  toggleTaskStatus
+} from '@/stores/redux/slices/todos';
 import { TodoPage } from './TodoPage';
 import { Task } from '../Task';
 
 export const ReduxPage = () => {
-  const tasks = useAppSelector((state) => state.todos);
+  const tasks = useAppSelector((state) => state.tasks.tasks);
   const dispatch = useAppDispatch();
   const handleAddTask = (newTaskName: string) => {
-    dispatch(addTodo(newTaskName));
+    dispatch(addTask(newTaskName));
   };
   const handleDeleteTask = (taskId: string) => {
-    dispatch(deleteTodo(taskId));
+    dispatch(deleteTask(taskId));
   };
   const handleToggleTaskStatus = (taskId: string) => {
-    dispatch(toggleStatus(taskId));
+    dispatch(toggleTaskStatus(taskId));
   };
   return (
     <TodoPage

@@ -1,25 +1,37 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Task } from '@/types';
+import { TodoListState } from '@/types';
 import { v1 } from 'uuid';
 
-const initialState: Task[] = [];
+const initialState: TodoListState = {
+  tasks: [],
+  hasError: false,
+  isLoading: false
+};
 export const TodosSlice = createSlice({
   initialState,
   name: 'todos',
   reducers: {
-    addTodo: (state, action: PayloadAction<string>) => {
-      const newTodo: Task = {
-        id: v1(),
-        name: action.payload,
-        isDone: false
+    addTask: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        tasks: [
+          ...state.tasks,
+          {
+            id: v1(),
+            name: action.payload,
+            isDone: false
+          }
+        ]
       };
-      return [...state, newTodo];
     },
-    deleteTodo: (state, action: PayloadAction<string>) => {
-      return state.filter(({ id }) => id !== action.payload);
+    deleteTask: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        tasks: state.tasks.filter(({ id }) => id !== action.payload)
+      };
     },
-    toggleStatus: (state, action: PayloadAction<string>) => {
-      const newTasks = state.map((task) => {
+    toggleTaskStatus: (state, action: PayloadAction<string>) => {
+      const newTasks = state.tasks.map((task) => {
         if (action.payload === task.id) {
           const newTask = { ...task };
           newTask.isDone = !newTask.isDone;
@@ -29,10 +41,10 @@ export const TodosSlice = createSlice({
         return task;
       });
 
-      return newTasks;
+      return { ...state, tasks: newTasks };
     }
   }
 });
 
-export const { addTodo, deleteTodo, toggleStatus } = TodosSlice.actions;
+export const { addTask, deleteTask, toggleTaskStatus } = TodosSlice.actions;
 export default TodosSlice.reducer;

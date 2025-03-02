@@ -4,7 +4,7 @@ import TodoReducer from './slices/todos';
 
 export const ReduxStore = configureStore({
   reducer: {
-    todos: TodoReducer
+    tasks: TodoReducer
   }
 });
 
