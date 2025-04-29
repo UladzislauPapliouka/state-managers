@@ -7,27 +7,61 @@ import { ReduxStore } from '@/stores/redux';
 import { MobXPage, Todos } from '@/components/Pages/MobXPage';
 import { ZustandPage } from '@/components/Pages/ZustandPage';
 import { JotaiPage } from '@/components/Pages/JotaiPage';
-export const ROUTES: Array<RouteProps> = [
-  { path: '/', element: <Redirect to={'/redux'} /> },
+import { LoginPage } from '@/components/Pages/Login';
+import { ProtectedRoute } from '@/components/ProtectedRoute.tsx';
+export const PROTECTED_ROUTES: Array<RouteProps> = [
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <Redirect to={'/redux'} />
+      </ProtectedRoute>
+    )
+  },
   {
     path: 'redux',
     element: (
-      <Provider store={ReduxStore}>
-        <ReduxPage />
-      </Provider>
+      <ProtectedRoute>
+        <Provider store={ReduxStore}>
+          <ReduxPage />
+        </Provider>
+      </ProtectedRoute>
     )
   },
   {
     path: 'mobx',
-    element: <MobXPage store={new Todos()} />
+    element: (
+      <ProtectedRoute>
+        <MobXPage store={new Todos()} />
+      </ProtectedRoute>
+    )
   },
   {
     path: 'zustand',
-    element: <ZustandPage />
+    element: (
+      <ProtectedRoute>
+        <ZustandPage />
+      </ProtectedRoute>
+    )
   },
   {
     path: 'jotai',
-    element: <JotaiPage />
+    element: (
+      <ProtectedRoute>
+        <JotaiPage />
+      </ProtectedRoute>
+    )
   },
-  { path: '*', element: <Page404 /> }
+  {
+    path: '*',
+    element: (
+      <ProtectedRoute>
+        <Page404 />
+      </ProtectedRoute>
+    )
+  }
+];
+
+export const PUBLIC_ROUTES: Array<RouteProps> = [
+  { path: 'login', element: <LoginPage /> }
 ];
