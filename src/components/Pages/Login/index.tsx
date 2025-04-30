@@ -1,8 +1,11 @@
-import { Button, Card, Center, Field, Input } from '@chakra-ui/react';
+import { Button, Card, Center, Field, Input, Text } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup';
+import { useAuthContext } from '@/components/Providers/AuthContext.tsx';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 const loginScheme = yup.object().shape({
   email: yup.string().email().required(),
@@ -17,12 +20,29 @@ export const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setError,
+    reset
   } = useForm<FormValues>({
     resolver: yupResolver(loginScheme)
   });
-
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const { isAuthenticated, login } = useAuthContext();
+  const navigate = useNavigate();
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const { status } = await login(data.email, data.password);
+      if (status === 401) {
+        setError('root', { message: 'Неверный логин или пароль' });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/redux');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <Center bg="bg.emphasized" h="100vh" w="100vw">
@@ -45,9 +65,16 @@ export const LoginPage = () => {
               <Input {...register('password')} />
               <Field.ErrorText>{errors.password?.message}</Field.ErrorText>
             </Field.Root>
+            <Text style={{ color: 'red' }}>{errors.root?.message}</Text>
           </Card.Body>
           <Card.Footer justifyContent="flex-end">
-            <Button variant="outline" type={'reset'}>
+            <Button
+              onClick={() => {
+                reset();
+              }}
+              variant="outline"
+              type={'reset'}
+            >
               Cancel
             </Button>
             <Button variant="solid" type={'submit'}>

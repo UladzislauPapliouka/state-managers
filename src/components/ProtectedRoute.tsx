@@ -1,9 +1,14 @@
-import { ReactNode } from 'react';
-import { Redirect } from '@/components/Redirect';
+import { ReactNode, useEffect } from 'react';
+import { useAuthContext } from '@/components/Providers/AuthContext.tsx';
+import { useNavigate } from 'react-router';
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  if (false) {
-    return <Redirect to={'/login'} />;
-  }
+  const { isAuthenticated } = useAuthContext();
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
   return children;
 };
