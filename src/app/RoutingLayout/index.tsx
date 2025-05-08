@@ -1,9 +1,9 @@
-import './App.css';
+import './index.css';
 import { Box, Tabs, Center } from '@chakra-ui/react';
 import { StateManagers } from '@/shared/constants/state-managers.ts';
 import { NavLink, Outlet, useLocation } from 'react-router';
 
-function App() {
+export function RoutingLayout() {
   const location = useLocation();
   console.log(location);
   return (
@@ -36,5 +36,3 @@ function App() {
     </>
   );
 }
-
-export default App;

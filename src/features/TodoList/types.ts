@@ -1,8 +1,4 @@
-export interface Task {
-  id: string;
-  name: string;
-  isDone: boolean;
-}
+import { Task } from '@/entities/Task/types.ts';
 
 export interface TodoListState {
   tasks: Task[];

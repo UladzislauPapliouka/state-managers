@@ -1,6 +1,6 @@
 import { Center, CenterProps } from '@chakra-ui/react';
 
-export const PageLayout = (props: CenterProps) => {
+export const PageOutletLayout = (props: CenterProps) => {
   return (
     <Center
       background={'bg.muted'}

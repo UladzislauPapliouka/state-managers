@@ -1,7 +1,7 @@
 import { VStack, Input, Kbd } from '@chakra-ui/react';
-import { PageLayout } from '@/entities/PageLayout.tsx';
+import { PageOutletLayout } from '@/shared/ui/PageOutletLayout';
 import { InputGroup } from '@/shared/ui/input-group.tsx';
-import { Task as TaskType } from '../shared/types';
+import { TaskType } from '@/entities/Task';
 import { ReactNode } from 'react';
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
     key: string
   ) => ReactNode;
 };
-export const TodoPage = ({
+export const BaseTodoPage = ({
   onAdd,
   onDelete,
   onDone,
@@ -26,7 +26,7 @@ export const TodoPage = ({
   console.log(tasks);
 
   return (
-    <PageLayout>
+    <PageOutletLayout>
       <VStack>
         <InputGroup w={400} flex="1" endElement={<Kbd>Enter</Kbd>}>
           <Input
@@ -40,6 +40,6 @@ export const TodoPage = ({
         </InputGroup>
         {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
       </VStack>
-    </PageLayout>
+    </PageOutletLayout>
   );
 };

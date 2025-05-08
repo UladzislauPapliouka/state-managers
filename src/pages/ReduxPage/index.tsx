@@ -4,8 +4,8 @@ import {
   deleteTask,
   toggleTaskStatus
 } from '@/stores/redux/slices/todos.ts';
-import { TodoPage } from './TodoPage.tsx';
-import { Task } from '../entities/Task/Task.tsx';
+import { BaseTodoPage } from '../BaseTodoPage';
+import { TaskComponent } from '@/entities/Task';
 
 export const ReduxPage = () => {
   const tasks = useAppSelector((state) => state.tasks.tasks);
@@ -20,13 +20,18 @@ export const ReduxPage = () => {
     dispatch(toggleTaskStatus(taskId));
   };
   return (
-    <TodoPage
+    <BaseTodoPage
       tasks={tasks}
       onAdd={handleAddTask}
       onDelete={handleDeleteTask}
       onDone={handleToggleTaskStatus}
       renderToDo={(task, onDelete, onDone, key) => (
-        <Task task={task} onDelete={onDelete} onDone={onDone} key={key} />
+        <TaskComponent
+          task={task}
+          onDelete={onDelete}
+          onDone={onDone}
+          key={key}
+        />
       )}
     />
   );

@@ -1,12 +1,12 @@
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import { PageLayout } from '@/entities/PageLayout.tsx';
+import { PageOutletLayout } from '@/shared/ui/PageOutletLayout';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router';
 
-export const Page404 = () => {
+export const NotFoundPage = () => {
   const navigate = useNavigate();
   return (
-    <PageLayout>
+    <PageOutletLayout>
       <VStack>
         <Heading>Page Not Found</Heading>
         <Button onClick={() => navigate('/')}>
@@ -14,6 +14,6 @@ export const Page404 = () => {
           Back
         </Button>
       </VStack>
-    </PageLayout>
+    </PageOutletLayout>
   );
 };

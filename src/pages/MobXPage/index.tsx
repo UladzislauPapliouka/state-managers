@@ -1,9 +1,8 @@
 import { makeObservable, observable, action } from 'mobx';
 import { v1 } from 'uuid';
-import { TodoPage } from './TodoPage.tsx';
+import { BaseTodoPage } from '../BaseTodoPage';
 import { observer } from 'mobx-react-lite';
-import { Task as TaskComponent } from '@/entities/Task/Task.tsx';
-import { Task as TaskType } from '../shared/types';
+import { TaskType, TaskComponent } from '@/entities/Task';
 class Task {
   id: string = v1();
   name: string;
@@ -76,7 +75,7 @@ export const MobXPage = observer(({ store }: { store: Todos }) => {
   console.log(store.todos);
 
   return (
-    <TodoPage
+    <BaseTodoPage
       tasks={store.todos}
       onAdd={store.addTodo}
       onDelete={store.deleteTodo}

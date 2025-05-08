@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from '../pages/App.tsx';
+import { RoutingLayout } from './RoutingLayout';
 import { Provider as ChakraUIProvider } from '@/shared/ui/provider.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { PROTECTED_ROUTES, PUBLIC_ROUTES } from '@/shared/constants/routes.tsx';
@@ -16,7 +16,7 @@ createRoot(document.getElementById('root') as HTMLElement).render(
             {PUBLIC_ROUTES.map((props, index) => (
               <Route key={index} {...props} />
             ))}
-            <Route path="/" element={<App />}>
+            <Route path="/" element={<RoutingLayout />}>
               {PROTECTED_ROUTES.map((props, index) => (
                 <Route key={index} {...props} />
               ))}

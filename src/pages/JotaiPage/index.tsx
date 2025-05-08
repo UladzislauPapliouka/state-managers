@@ -1,10 +1,9 @@
-import { Task } from '../shared/types';
-import { TodoPage } from './TodoPage.tsx';
+import { BaseTodoPage } from '../BaseTodoPage';
 import { atom, useAtom } from 'jotai';
 import { v1 } from 'uuid';
-import { Task as TaskComponent } from '../entities/Task/Task.tsx';
+import { TaskComponent, TaskType } from '../../entities/Task';
 
-const todosAtom = atom<Task[]>([]);
+const todosAtom = atom<TaskType[]>([]);
 export const JotaiPage = () => {
   const [tasks, setTodos] = useAtom(todosAtom);
   const handleAddTask = (taskName: string) =>
@@ -23,7 +22,7 @@ export const JotaiPage = () => {
       })
     );
   return (
-    <TodoPage
+    <BaseTodoPage
       tasks={tasks}
       onDelete={handelDeleteTask}
       onAdd={handleAddTask}

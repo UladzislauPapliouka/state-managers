@@ -1,14 +1,14 @@
 import { RouteProps } from 'react-router';
 import { Redirect } from '../ui/Redirect';
-import { Page404 } from '@/pages/Page404.tsx';
-import { ReduxPage } from '@/pages/redux-page.tsx';
+import { NotFoundPage } from '@/pages/NotFoundPage';
+import { ReduxPage } from '@/pages/ReduxPage';
 import { Provider } from 'react-redux';
 import { ReduxStore } from '@/stores/redux';
-import { MobXPage, Todos } from '@/pages/MobXPage.tsx';
-import { ZustandPage } from '@/pages/ZustandPage.tsx';
-import { JotaiPage } from '@/pages/JotaiPage.tsx';
+import { MobXPage, Todos } from '@/pages/MobXPage';
+import { ZustandPage } from '@/pages/ZustandPage';
+import { JotaiPage } from '@/pages/JotaiPage';
 import { LoginPage } from '../../pages/Login';
-import { ProtectedRoute } from '@/entities/ProtectedRoute.tsx';
+import { ProtectedRoute } from '../ui/ProtectedRoute';
 export const PROTECTED_ROUTES: Array<RouteProps> = [
   {
     path: '/',
@@ -56,7 +56,7 @@ export const PROTECTED_ROUTES: Array<RouteProps> = [
     path: '*',
     element: (
       <ProtectedRoute>
-        <Page404 />
+        <NotFoundPage />
       </ProtectedRoute>
     )
   }

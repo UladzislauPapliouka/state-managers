@@ -1,10 +1,9 @@
 import { create } from 'zustand';
-import { TodoPage } from './TodoPage.tsx';
+import { BaseTodoPage } from '../BaseTodoPage';
 import { v1 } from 'uuid';
-import { Task } from '../shared/types';
-import { Task as TaskComponent } from '@/entities/Task/Task.tsx';
+import { TaskComponent, TaskType } from '@/entities/Task';
 interface TodoStore {
-  todos: Task[];
+  todos: TaskType[];
   addTodo: (newTaskName: string) => void;
   deleteTodo: (taskId: string) => void;
   toggleStatus: (taskId: string) => void;
@@ -36,7 +35,7 @@ export const ZustandPage = () => {
     (state) => state
   );
   return (
-    <TodoPage
+    <BaseTodoPage
       tasks={todos}
       onAdd={addTodo}
       onDelete={deleteTodo}
