@@ -1,11 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import App from './App.tsx';
-import { Provider as ChakraUIProvider } from '@/components/ui/provider';
+import App from '../pages/App.tsx';
+import { Provider as ChakraUIProvider } from '@/shared/ui/provider.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import { PROTECTED_ROUTES, PUBLIC_ROUTES } from '@/constants/routes.tsx';
-import { AuthProvider } from '@/components/Providers/AuthContext.tsx';
+import { PROTECTED_ROUTES, PUBLIC_ROUTES } from '@/shared/constants/routes.tsx';
+import { AuthProvider } from '@/features/AuthContext.tsx';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>

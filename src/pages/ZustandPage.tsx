@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import { TodoPage } from './TodoPage';
+import { TodoPage } from './TodoPage.tsx';
 import { v1 } from 'uuid';
-import { Task } from '@/types';
-import { Task as TaskComponent } from '@/components/Task';
+import { Task } from '../shared/types';
+import { Task as TaskComponent } from '@/entities/Task/Task.tsx';
 interface TodoStore {
   todos: Task[];
   addTodo: (newTaskName: string) => void;

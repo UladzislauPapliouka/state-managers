@@ -6,7 +6,10 @@ import {
   defineConfig,
   createSystem
 } from '@chakra-ui/react';
-import { ColorModeProvider, type ColorModeProviderProps } from './color-mode';
+import {
+  ColorModeProvider,
+  type ColorModeProviderProps
+} from './color-mode.tsx';
 
 const config = defineConfig({
   theme: {

@@ -3,9 +3,9 @@ import {
   addTask,
   deleteTask,
   toggleTaskStatus
-} from '@/stores/redux/slices/todos';
-import { TodoPage } from './TodoPage';
-import { Task } from '../Task';
+} from '@/stores/redux/slices/todos.ts';
+import { TodoPage } from './TodoPage.tsx';
+import { Task } from '../entities/Task/Task.tsx';
 
 export const ReduxPage = () => {
   const tasks = useAppSelector((state) => state.tasks.tasks);

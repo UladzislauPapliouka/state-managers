@@ -1,8 +1,8 @@
-import { Task } from '@/types';
-import { TodoPage } from './TodoPage';
+import { Task } from '../shared/types';
+import { TodoPage } from './TodoPage.tsx';
 import { atom, useAtom } from 'jotai';
 import { v1 } from 'uuid';
-import { Task as TaskComponent } from '../Task';
+import { Task as TaskComponent } from '../entities/Task/Task.tsx';
 
 const todosAtom = atom<Task[]>([]);
 export const JotaiPage = () => {

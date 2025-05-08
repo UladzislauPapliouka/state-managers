@@ -1,6 +1,6 @@
 import './App.css';
 import { Box, Tabs, Center } from '@chakra-ui/react';
-import { StateManagers } from '@/constants/state-managers.ts';
+import { StateManagers } from '@/shared/constants/state-managers.ts';
 import { NavLink, Outlet, useLocation } from 'react-router';
 
 function App() {

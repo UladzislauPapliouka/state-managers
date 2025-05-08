@@ -1,5 +1,5 @@
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import { PageLayout } from '@/components/PageLayout.tsx';
+import { PageLayout } from '@/entities/PageLayout.tsx';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router';
 

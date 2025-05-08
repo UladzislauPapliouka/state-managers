@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup';
-import { useAuthContext } from '@/components/Providers/AuthContext.tsx';
+import { useAuthContext } from '@/features/AuthContext.tsx';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 

@@ -1,4 +1,4 @@
-import { Tab } from '@/types';
+import { Tab } from '../types';
 
 export const StateManagers: Array<Tab> = [
   {

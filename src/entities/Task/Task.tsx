@@ -1,9 +1,9 @@
 import { Button, ButtonGroup, HStack, Text } from '@chakra-ui/react';
-import { Checkbox } from './ui/checkbox';
+import { Checkbox } from '@/shared/ui/checkbox.tsx';
 // import { FiEdit } from 'react-icons/fi';
 import { MdDelete } from 'react-icons/md';
 import styles from './Task.module.css';
-import { Task as TaskType } from '@/types';
+import { Task as TaskType } from '../../shared/types';
 type Props = {
   onDone: (id: string) => void;
   onDelete: (id: string) => void;

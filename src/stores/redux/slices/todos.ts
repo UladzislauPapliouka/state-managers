@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TodoListState } from '@/types';
+import { TodoListState } from '../../../shared/types';
 import { v1 } from 'uuid';
 
 const initialState: TodoListState = {

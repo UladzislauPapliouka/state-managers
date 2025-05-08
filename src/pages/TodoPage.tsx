@@ -1,7 +1,7 @@
 import { VStack, Input, Kbd } from '@chakra-ui/react';
-import { PageLayout } from '@/components/PageLayout.tsx';
-import { InputGroup } from '../ui/input-group';
-import { Task as TaskType } from '@/types';
+import { PageLayout } from '@/entities/PageLayout.tsx';
+import { InputGroup } from '@/shared/ui/input-group.tsx';
+import { Task as TaskType } from '../shared/types';
 import { ReactNode } from 'react';
 
 type Props = {

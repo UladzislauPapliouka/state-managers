@@ -1,9 +1,9 @@
 import { makeObservable, observable, action } from 'mobx';
 import { v1 } from 'uuid';
-import { TodoPage } from './TodoPage';
+import { TodoPage } from './TodoPage.tsx';
 import { observer } from 'mobx-react-lite';
-import { Task as TaskComponent } from '@/components/Task';
-import { Task as TaskType } from '@/types';
+import { Task as TaskComponent } from '@/entities/Task/Task.tsx';
+import { Task as TaskType } from '../shared/types';
 class Task {
   id: string = v1();
   name: string;

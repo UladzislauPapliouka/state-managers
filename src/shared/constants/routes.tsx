@@ -1,14 +1,14 @@
 import { RouteProps } from 'react-router';
-import { Redirect } from '@/components/Redirect';
-import { Page404 } from '@/components/Pages/Page404.tsx';
-import { ReduxPage } from '@/components/Pages/redux-page.tsx';
+import { Redirect } from '../ui/Redirect';
+import { Page404 } from '@/pages/Page404.tsx';
+import { ReduxPage } from '@/pages/redux-page.tsx';
 import { Provider } from 'react-redux';
 import { ReduxStore } from '@/stores/redux';
-import { MobXPage, Todos } from '@/components/Pages/MobXPage';
-import { ZustandPage } from '@/components/Pages/ZustandPage';
-import { JotaiPage } from '@/components/Pages/JotaiPage';
-import { LoginPage } from '@/components/Pages/Login';
-import { ProtectedRoute } from '@/components/ProtectedRoute.tsx';
+import { MobXPage, Todos } from '@/pages/MobXPage.tsx';
+import { ZustandPage } from '@/pages/ZustandPage.tsx';
+import { JotaiPage } from '@/pages/JotaiPage.tsx';
+import { LoginPage } from '../../pages/Login';
+import { ProtectedRoute } from '@/entities/ProtectedRoute.tsx';
 export const PROTECTED_ROUTES: Array<RouteProps> = [
   {
     path: '/',
