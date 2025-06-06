@@ -3,7 +3,7 @@ import { Redirect } from '../ui/Redirect';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import { ReduxPage } from '@/pages/ReduxPage';
 import { Provider } from 'react-redux';
-import { ReduxStore } from '@/stores/redux';
+import { ReduxStore } from '@/pages/ReduxPage/stores/redux';
 import { MobXPage, Todos } from '@/pages/MobXPage';
 import { ZustandPage } from '@/pages/ZustandPage';
 import { JotaiPage } from '@/pages/JotaiPage';

@@ -1,7 +1,12 @@
+import { Task } from '@/entities/Task/types';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TodoListState } from '../../../shared/types';
 import { v1 } from 'uuid';
 
+interface TodoListState {
+  tasks: Task[];
+  hasError: boolean;
+  isLoading: boolean;
+}
 const initialState: TodoListState = {
   tasks: [],
   hasError: false,
@@ -42,9 +47,22 @@ export const TodosSlice = createSlice({
       });
 
       return { ...state, tasks: newTasks };
+    },
+    editTask: (
+      state,
+      action: PayloadAction<{ taskId: string; newTaskName: string }>
+    ) => {
+      const newTasks = state.tasks.map((task) => {
+        if (action.payload.taskId === task.id) {
+          return { ...task, name: action.payload.newTaskName };
+        }
+        return task;
+      });
+      return { ...state, tasks: newTasks };
     }
   }
 });
 
-export const { addTask, deleteTask, toggleTaskStatus } = TodosSlice.actions;
+export const { addTask, deleteTask, toggleTaskStatus, editTask } =
+  TodosSlice.actions;
 export default TodosSlice.reducer;
