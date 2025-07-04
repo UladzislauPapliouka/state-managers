@@ -1,3 +1,4 @@
+import { toaster } from '@/shared/ui/toaster';
 import {
   createContext,
   ReactNode,
@@ -39,8 +40,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         nickname: 'dev'
       });
       setIsAuthenticated(true);
+      toaster.create({ type: 'success', title: 'Successed login' });
       return { status: 200 };
     } else {
+      toaster.create({ type: 'error', title: 'Incorrect Login or Password' });
       return { status: 401 };
     }
   }, []);

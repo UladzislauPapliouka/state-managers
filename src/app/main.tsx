@@ -6,6 +6,7 @@ import { Provider as ChakraUIProvider } from '@/shared/ui/provider.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { PROTECTED_ROUTES, PUBLIC_ROUTES } from '@/shared/constants/routes.tsx';
 import { AuthProvider } from '@/features/AuthContext.tsx';
+import { Toaster } from '@/shared/ui/toaster';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root') as HTMLElement).render(
             </Route>
           </Routes>
         </AuthProvider>
+        <Toaster />
       </ChakraUIProvider>
     </BrowserRouter>
   </StrictMode>
