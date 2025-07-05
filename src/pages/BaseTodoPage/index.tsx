@@ -3,6 +3,8 @@ import { PageOutletLayout } from '@/shared/ui/PageOutletLayout';
 import { InputGroup } from '@/shared/ui/input-group.tsx';
 import { TaskType } from '@/entities/Task';
 import { ReactNode } from 'react';
+import { DndContext } from '@dnd-kit/core';
+import { SortableContext } from '@dnd-kit/sortable';
 
 type Props = {
   tasks: TaskType[];
@@ -15,16 +17,21 @@ type Props = {
     onDone: (id: string) => void,
     key: string
   ) => ReactNode;
+  onTaskReorder: (
+    currentTaskId: string,
+    overTaskId: string,
+    direction: 'up' | 'down'
+  ) => void;
 };
 export const BaseTodoPage = ({
   onAdd,
   onDelete,
   onDone,
   tasks,
-  renderToDo
+  renderToDo,
+  onTaskReorder
 }: Props) => {
   console.log(tasks);
-
   return (
     <PageOutletLayout>
       <VStack>
@@ -38,7 +45,20 @@ export const BaseTodoPage = ({
             placeholder="Task name..."
           />
         </InputGroup>
-        {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
+        <DndContext
+          onDragEnd={(event) => {
+            console.log(event);
+            onTaskReorder(
+              event.active.id as string,
+              event.over?.id as string,
+              event.delta.y > 0 ? 'down' : 'up'
+            );
+          }}
+        >
+          <SortableContext items={tasks.map((task) => task.id)}>
+            {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
+          </SortableContext>
+        </DndContext>
       </VStack>
     </PageOutletLayout>
   );

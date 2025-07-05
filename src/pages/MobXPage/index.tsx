@@ -50,7 +50,34 @@ export class Todos {
       }
     });
   };
+  reorderTodos = (
+    currentTaskId: string,
+    overTaskId: string,
+    direction: 'up' | 'down'
+  ) => {
+    let finalTasks: Task[] = [];
+    const currentTask = this.todos.find(
+      (el) => el.id === currentTaskId
+    ) as Task;
+    finalTasks = this.todos.filter((el) => el.id !== currentTaskId);
+    console.log(finalTasks);
+    const overTaskIndex = finalTasks.findIndex((el) => el.id === overTaskId);
+    console.log(direction);
+    const result =
+      direction === 'up'
+        ? finalTasks
+            .slice(0, overTaskIndex)
+            .concat(currentTask)
+            .concat(finalTasks.slice(overTaskIndex, finalTasks.length))
+        : finalTasks
+            .slice(0, overTaskIndex + 1)
+            .concat(currentTask)
+            .concat(finalTasks.slice(overTaskIndex + 1));
+    console.log(result);
+    this.todos = result;
+  };
 }
+
 const ObservableTask = observer(
   ({
     task,
@@ -80,6 +107,7 @@ export const MobXPage = observer(({ store }: { store: Todos }) => {
       onAdd={store.addTodo}
       onDelete={store.deleteTodo}
       onDone={store.toggleStatus}
+      onTaskReorder={store.reorderTodos}
       renderToDo={(task, onDelete, onDone, key) => (
         <ObservableTask
           task={task}

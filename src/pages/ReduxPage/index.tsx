@@ -3,7 +3,8 @@ import {
   addTask,
   deleteTask,
   toggleTaskStatus,
-  editTask
+  editTask,
+  reorderTask
 } from '@/pages/ReduxPage/stores/redux/slices/todos';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
@@ -23,12 +24,27 @@ export const ReduxPage = () => {
   const handleEditTask = (taskId: string, newTaskName: string) => {
     dispatch(editTask({ taskId, newTaskName }));
   };
+  const handleReorderTask = (
+    currentTaskId: string,
+    overTaskId: string,
+    direction: 'up' | 'down'
+  ) => {
+    dispatch(
+      reorderTask({
+        direction,
+        overTaskId,
+        currentTaskId
+      })
+    );
+  };
+
   return (
     <BaseTodoPage
       tasks={tasks}
       onAdd={handleAddTask}
       onDelete={handleDeleteTask}
       onDone={handleToggleTaskStatus}
+      onTaskReorder={handleReorderTask}
       renderToDo={(task, onDelete, onDone, key) => (
         <TaskComponent
           task={task}
