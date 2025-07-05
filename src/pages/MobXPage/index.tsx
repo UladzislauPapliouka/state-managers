@@ -4,7 +4,7 @@ import { BaseTodoPage } from '../BaseTodoPage';
 import { observer } from 'mobx-react-lite';
 import { TaskType, TaskComponent } from '@/entities/Task';
 import { dummyJsonApi } from '@/features/TodoList/api';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 class Task {
   id: string = v1();
   name: string;
@@ -105,7 +105,7 @@ const ObservableTask = observer(
   )
 );
 export const MobXPage = observer(({ store }: { store: Todos }) => {
-  const controller = new AbortController();
+  const controller = useMemo(() => new AbortController(), []);
   console.log(store.todos);
   useEffect(() => {
     if (store.todos.length === 0) {
@@ -114,7 +114,7 @@ export const MobXPage = observer(({ store }: { store: Todos }) => {
     return () => {
       controller.abort();
     };
-  }, [store.fetchTodos]);
+  }, [store, controller]);
   return (
     <BaseTodoPage
       tasks={store.todos}
