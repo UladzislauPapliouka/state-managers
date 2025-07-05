@@ -4,10 +4,12 @@ import {
   deleteTask,
   toggleTaskStatus,
   editTask,
-  reorderTask
+  reorderTask,
+  fetchTodos
 } from '@/pages/ReduxPage/stores/redux/slices/todos';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
+import { useEffect } from 'react';
 
 export const ReduxPage = () => {
   const tasks = useAppSelector((state) => state.tasks.tasks);
@@ -37,6 +39,12 @@ export const ReduxPage = () => {
       })
     );
   };
+
+  useEffect(() => {
+    if (tasks.length === 0) {
+      dispatch(fetchTodos());
+    }
+  }, [dispatch, tasks.length]);
 
   return (
     <BaseTodoPage

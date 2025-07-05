@@ -1,5 +1,6 @@
 import { Task } from '@/entities/Task/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 } from 'uuid';
 
 interface TodoListState {
@@ -12,6 +13,15 @@ const initialState: TodoListState = {
   hasError: false,
   isLoading: false
 };
+
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
+  const abortController = new AbortController();
+  const response = await dummyJsonApi.getTodos({
+    signal: abortController.signal
+  });
+  return response.map(convertTodoItemToTask);
+});
+
 export const TodosSlice = createSlice({
   initialState,
   name: 'todos',
@@ -92,6 +102,11 @@ export const TodosSlice = createSlice({
       console.log(result);
       return { ...state, tasks: result };
     }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchTodos.fulfilled, (state, action) => {
+      return { ...state, tasks: action.payload };
+    });
   }
 });
 
