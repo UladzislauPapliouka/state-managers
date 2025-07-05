@@ -3,8 +3,17 @@ import { BaseTodoPage } from '../BaseTodoPage';
 import { v1 } from 'uuid';
 import { TaskComponent, TaskType } from '@/entities/Task';
 import { Task } from '@/entities/Task/types.ts';
+import {
+  convertTodoItemToTask,
+  dummyJsonApi,
+  TodoItem
+} from '@/features/TodoList/api';
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
 interface TodoStore {
   todos: TaskType[];
+  initTodos: (tasks: TaskType[]) => void;
   addTodo: (newTaskName: string) => void;
   deleteTodo: (taskId: string) => void;
   toggleStatus: (taskId: string) => void;
@@ -16,6 +25,9 @@ interface TodoStore {
 }
 const useStore = create<TodoStore>()((set, get) => ({
   todos: [],
+  initTodos: (tasks: TaskType[]) => {
+    set({ todos: tasks });
+  },
   addTodo: (newTaskName) =>
     set((state) => ({
       todos: state.todos.concat([
@@ -62,9 +74,19 @@ const useStore = create<TodoStore>()((set, get) => ({
   }
 }));
 export const ZustandPage = () => {
-  const { todos, toggleStatus, addTodo, deleteTodo, reorderTask } = useStore(
-    (state) => state
-  );
+  const { todos, toggleStatus, addTodo, deleteTodo, reorderTask, initTodos } =
+    useStore((state) => state);
+  const { data, isLoading } = useQuery<TodoItem[]>({
+    queryKey: ['todos'],
+    queryFn: dummyJsonApi.getTodos,
+    enabled: todos.length === 0
+  });
+  useEffect(() => {
+    if (todos.length === 0 && !isLoading) {
+      initTodos(data?.map(convertTodoItemToTask) || []);
+    }
+  }, [data, todos, initTodos, isLoading]);
+  if (isLoading) return <div>Loading...</div>;
   return (
     <BaseTodoPage
       tasks={todos}

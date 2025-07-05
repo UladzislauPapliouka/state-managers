@@ -3,6 +3,8 @@ import { v1 } from 'uuid';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { observer } from 'mobx-react-lite';
 import { TaskType, TaskComponent } from '@/entities/Task';
+import { dummyJsonApi } from '@/features/TodoList/api';
+import { useEffect } from 'react';
 class Task {
   id: string = v1();
   name: string;
@@ -50,6 +52,10 @@ export class Todos {
       }
     });
   };
+  fetchTodos = action(async ({ signal }: { signal?: AbortSignal }) => {
+    const todos = await dummyJsonApi.getTodos({ signal });
+    this.todos = todos.map((todo) => new Task(todo.todo));
+  });
   reorderTodos = (
     currentTaskId: string,
     overTaskId: string,
@@ -99,8 +105,16 @@ const ObservableTask = observer(
   )
 );
 export const MobXPage = observer(({ store }: { store: Todos }) => {
+  const controller = new AbortController();
   console.log(store.todos);
-
+  useEffect(() => {
+    if (store.todos.length === 0) {
+      store.fetchTodos({ signal: controller.signal });
+    }
+    return () => {
+      controller.abort();
+    };
+  }, [store.fetchTodos]);
   return (
     <BaseTodoPage
       tasks={store.todos}
