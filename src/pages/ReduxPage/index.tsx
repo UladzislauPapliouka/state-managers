@@ -10,9 +10,13 @@ import {
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
 import { useEffect } from 'react';
+import { toaster } from '@/shared/ui/toaster';
 
 export const ReduxPage = () => {
   const tasks = useAppSelector((state) => state.tasks.tasks);
+  const status = useAppSelector((state) => state.tasks.status);
+  const isInitialized = useAppSelector((state) => state.tasks.isInitialized);
+  const hasError = useAppSelector((state) => state.tasks.hasError);
   const dispatch = useAppDispatch();
   const handleAddTask = (newTaskName: string) => {
     dispatch(addTask(newTaskName));
@@ -41,11 +45,25 @@ export const ReduxPage = () => {
   };
 
   useEffect(() => {
-    if (tasks.length === 0) {
-      dispatch(fetchTodos());
+    if (!isInitialized) {
+      const promise = dispatch(fetchTodos());
+      return () => {
+        promise.abort();
+      };
     }
-  }, [dispatch, tasks.length]);
+  }, [dispatch, isInitialized]);
+  useEffect(() => {
+    if (isInitialized && status === 'succeeded') {
+      toaster.create({ type: 'success', title: 'Todos fetched' });
+    }
+  }, [status, isInitialized]);
 
+  // Обработка ошибок загрузки
+  useEffect(() => {
+    if (hasError && status === 'failed') {
+      toaster.create({ type: 'error', title: 'Failed to fetch todos' });
+    }
+  }, [status, hasError]);
   return (
     <BaseTodoPage
       tasks={tasks}

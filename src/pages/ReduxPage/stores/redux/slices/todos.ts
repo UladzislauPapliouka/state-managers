@@ -6,21 +6,25 @@ import { v1 } from 'uuid';
 interface TodoListState {
   tasks: Task[];
   hasError: boolean;
-  isLoading: boolean;
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  isInitialized: boolean;
 }
 const initialState: TodoListState = {
   tasks: [],
   hasError: false,
-  isLoading: false
+  status: 'idle',
+  isInitialized: false
 };
 
-export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
-  const abortController = new AbortController();
-  const response = await dummyJsonApi.getTodos({
-    signal: abortController.signal
-  });
-  return response.map(convertTodoItemToTask);
-});
+export const fetchTodos = createAsyncThunk(
+  'todos/fetchTodos',
+  async (_, { signal }) => {
+    const response = await dummyJsonApi.getTodos({
+      signal: signal
+    });
+    return response.map(convertTodoItemToTask);
+  }
+);
 
 export const TodosSlice = createSlice({
   initialState,
@@ -104,9 +108,25 @@ export const TodosSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchTodos.fulfilled, (state, action) => {
-      return { ...state, tasks: action.payload };
-    });
+    builder
+      .addCase(fetchTodos.fulfilled, (state, action) => {
+        return {
+          ...state,
+          tasks: action.payload,
+          status: 'succeeded',
+          isInitialized: true
+        };
+      })
+      .addCase(fetchTodos.pending, (state) => {
+        return { ...state, status: 'loading' };
+      })
+      .addCase(fetchTodos.rejected, (state, action) => {
+        // Не обновляем состояние если запрос был отменен
+        if (action.meta.aborted) {
+          return state;
+        }
+        return { ...state, status: 'failed', hasError: true };
+      });
   }
 });
 

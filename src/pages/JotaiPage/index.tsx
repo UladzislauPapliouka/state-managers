@@ -5,6 +5,7 @@ import { TaskComponent, TaskType } from '../../entities/Task';
 import { Task } from '@/entities/Task/types.ts';
 import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
 import { useEffect } from 'react';
+import { toaster } from '@/shared/ui/toaster';
 
 const todosAtom = atom<TaskType[]>([]);
 
@@ -58,6 +59,7 @@ export const JotaiPage = () => {
       });
       const todos = response.map(convertTodoItemToTask);
       setTodos(todos);
+      toaster.create({ type: 'success', title: 'Todos fetched' });
     };
     if (tasks.length === 0) {
       fetchTodos();

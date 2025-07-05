@@ -10,6 +10,7 @@ import {
 } from '@/features/TodoList/api';
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { toaster } from '@/shared/ui/toaster';
 
 interface TodoStore {
   todos: TaskType[];
@@ -84,6 +85,7 @@ export const ZustandPage = () => {
   useEffect(() => {
     if (todos.length === 0 && !isLoading) {
       initTodos(data?.map(convertTodoItemToTask) || []);
+      toaster.create({ type: 'success', title: 'Todos fetched' });
     }
   }, [data, todos, initTodos, isLoading]);
   if (isLoading) return <div>Loading...</div>;

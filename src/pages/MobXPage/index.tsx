@@ -4,6 +4,7 @@ import { BaseTodoPage } from '../BaseTodoPage';
 import { observer } from 'mobx-react-lite';
 import { TaskType, TaskComponent } from '@/entities/Task';
 import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
+import { toaster } from '@/shared/ui/toaster';
 class Task {
   id: string;
   name: string;
@@ -61,6 +62,7 @@ export class Todos {
       const { id, isDone, name } = convertTodoItemToTask(todo);
       return new Task(name, id, isDone);
     });
+    toaster.create({ type: 'success', title: 'Todos fetched' });
   });
   reorderTodos = (
     currentTaskId: string,
