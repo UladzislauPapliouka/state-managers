@@ -3,14 +3,13 @@ import { v1 } from 'uuid';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { observer } from 'mobx-react-lite';
 import { TaskType, TaskComponent } from '@/entities/Task';
-import { dummyJsonApi } from '@/features/TodoList/api';
-import { useEffect, useMemo } from 'react';
+import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
 class Task {
-  id: string = v1();
+  id: string;
   name: string;
-  isDone: boolean = false;
+  isDone: boolean;
 
-  constructor(name: string) {
+  constructor(name: string, id: string = v1(), isDone: boolean = false) {
     makeObservable(this, {
       name: observable,
       isDone: observable,
@@ -19,6 +18,8 @@ class Task {
     console.log(`new task name: ${name}`);
 
     this.name = name;
+    this.id = id;
+    this.isDone = isDone;
   }
 
   toggleStatus() {
@@ -29,12 +30,14 @@ class Task {
 export class Todos {
   todos: Task[] = [];
   constructor() {
+    const controller = new AbortController();
     makeObservable(this, {
       todos: observable,
       addTodo: action,
       deleteTodo: action,
       toggleStatus: action
     });
+    this.fetchTodos({ signal: controller.signal });
   }
   addTodo = (taskName: string) => {
     const newTodo = new Task(taskName);
@@ -54,7 +57,10 @@ export class Todos {
   };
   fetchTodos = action(async ({ signal }: { signal?: AbortSignal }) => {
     const todos = await dummyJsonApi.getTodos({ signal });
-    this.todos = todos.map((todo) => new Task(todo.todo));
+    this.todos = todos.map((todo) => {
+      const { id, isDone, name } = convertTodoItemToTask(todo);
+      return new Task(name, id, isDone);
+    });
   });
   reorderTodos = (
     currentTaskId: string,
@@ -105,16 +111,8 @@ const ObservableTask = observer(
   )
 );
 export const MobXPage = observer(({ store }: { store: Todos }) => {
-  const controller = useMemo(() => new AbortController(), []);
   console.log(store.todos);
-  useEffect(() => {
-    if (store.todos.length === 0) {
-      store.fetchTodos({ signal: controller.signal });
-    }
-    return () => {
-      controller.abort();
-    };
-  }, [store, controller]);
+
   return (
     <BaseTodoPage
       tasks={store.todos}

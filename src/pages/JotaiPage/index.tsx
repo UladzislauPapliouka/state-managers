@@ -7,20 +7,10 @@ import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
 import { useEffect } from 'react';
 
 const todosAtom = atom<TaskType[]>([]);
-const abortControllerAtom = atom<AbortController>(new AbortController());
-const fetchTodosAtom = atom(null, async (get, set) => {
-  const abortController = get(abortControllerAtom);
-  const response = await dummyJsonApi.getTodos({
-    signal: abortController.signal
-  });
-  const todos = response.map(convertTodoItemToTask);
-  set(todosAtom, todos);
-});
 
 export const JotaiPage = () => {
   const [tasks, setTodos] = useAtom(todosAtom);
-  const [, fetchTodos] = useAtom(fetchTodosAtom);
-  const [abortController] = useAtom(abortControllerAtom);
+
   const handleAddTask = (taskName: string) =>
     setTodos([...tasks, { id: v1(), name: taskName, isDone: false }]);
   const handelDeleteTask = (taskId: string) =>
@@ -61,13 +51,21 @@ export const JotaiPage = () => {
     setTodos(result);
   };
   useEffect(() => {
+    const abortController = new AbortController();
+    const fetchTodos = async () => {
+      const response = await dummyJsonApi.getTodos({
+        signal: abortController.signal
+      });
+      const todos = response.map(convertTodoItemToTask);
+      setTodos(todos);
+    };
     if (tasks.length === 0) {
       fetchTodos();
     }
     return () => {
       abortController.abort();
     };
-  }, [tasks.length, fetchTodos, abortController]);
+  }, [tasks, setTodos]);
   return (
     <BaseTodoPage
       tasks={tasks}
