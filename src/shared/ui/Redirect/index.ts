@@ -6,5 +6,5 @@ export const Redirect = ({ to }: { to: string }) => {
   useEffect(() => {
     navigate(to);
   }, []);
-  return 'dsad';
+  return undefined;
 };

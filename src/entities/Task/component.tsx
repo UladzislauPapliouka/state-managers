@@ -51,6 +51,7 @@ export const Task = ({ task, onDelete, onDone, onEdit }: Props) => {
       borderRadius={'md'}
       padding={2}
       width={'400px'}
+      minHeight={'fit-content'}
       overflow={'hidden'}
       ref={setNodeRef}
       style={style}
