@@ -3,8 +3,16 @@ import { PageOutletLayout } from '@/shared/ui/PageOutletLayout';
 import { InputGroup } from '@/shared/ui/input-group.tsx';
 import { TaskType } from '@/entities/Task';
 import { ReactNode, useState } from 'react';
-import { DndContext } from '@dnd-kit/core';
-import { SortableContext } from '@dnd-kit/sortable';
+import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
+import {
+  SortableContext,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable';
+import {
+  restrictToParentElement,
+  restrictToVerticalAxis,
+  restrictToWindowEdges
+} from '@dnd-kit/modifiers';
 
 type Props = {
   tasks: TaskType[];
@@ -33,9 +41,21 @@ export const BaseTodoPage = ({
 }: Props) => {
   console.log(tasks);
   const [newTaskName, setNewTaskName] = useState('');
+  const pointerSensor = useSensor(PointerSensor, {
+    activationConstraint: {
+      delay: 300,
+      tolerance: 10
+    }
+  });
   return (
     <PageOutletLayout>
-      <VStack height={'100%'} gap={'10'} paddingTop={'10'} paddingBottom={'10'}>
+      <VStack
+        w={'500px'}
+        height={'100%'}
+        gap={'10'}
+        paddingTop={'10'}
+        paddingBottom={'10'}
+      >
         <InputGroup w={400} endElement={<Kbd>Enter</Kbd>}>
           <Input
             value={newTaskName}
@@ -56,7 +76,10 @@ export const BaseTodoPage = ({
           gap={'2'}
           direction={'column'}
           h={'100%'}
+          w={'100%'}
+          alignItems={'center'}
           overflowY={'auto'}
+          overflowX={'hidden'}
         >
           <DndContext
             onDragEnd={(event) => {
@@ -67,8 +90,17 @@ export const BaseTodoPage = ({
                 event.delta.y > 0 ? 'down' : 'up'
               );
             }}
+            sensors={[pointerSensor]}
+            modifiers={[
+              restrictToVerticalAxis,
+              restrictToParentElement,
+              restrictToWindowEdges
+            ]}
           >
-            <SortableContext items={tasks.map((task) => task.id)}>
+            <SortableContext
+              strategy={verticalListSortingStrategy}
+              items={tasks.map((task) => task.id)}
+            >
               {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
             </SortableContext>
           </DndContext>
