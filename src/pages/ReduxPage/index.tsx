@@ -9,7 +9,7 @@ import {
 } from '@/pages/ReduxPage/stores/redux/slices/todos';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { toaster } from '@/shared/ui/toaster';
 
 export const ReduxPage = () => {
@@ -18,31 +18,46 @@ export const ReduxPage = () => {
   const isInitialized = useAppSelector((state) => state.tasks.isInitialized);
   const hasError = useAppSelector((state) => state.tasks.hasError);
   const dispatch = useAppDispatch();
-  const handleAddTask = (newTaskName: string) => {
-    dispatch(addTask(newTaskName));
-  };
-  const handleDeleteTask = (taskId: string) => {
-    dispatch(deleteTask(taskId));
-  };
-  const handleToggleTaskStatus = (taskId: string) => {
-    dispatch(toggleTaskStatus(taskId));
-  };
-  const handleEditTask = (taskId: string, newTaskName: string) => {
-    dispatch(editTask({ taskId, newTaskName }));
-  };
-  const handleReorderTask = (
-    currentTaskId: string,
-    overTaskId: string,
-    direction: 'up' | 'down'
-  ) => {
-    dispatch(
-      reorderTask({
-        direction,
-        overTaskId,
-        currentTaskId
-      })
-    );
-  };
+  const handleAddTask = useCallback(
+    (newTaskName: string) => {
+      dispatch(addTask(newTaskName));
+    },
+    [dispatch]
+  );
+
+  const handleDeleteTask = useCallback(
+    (taskId: string) => {
+      dispatch(deleteTask(taskId));
+    },
+    [dispatch]
+  );
+
+  const handleToggleTaskStatus = useCallback(
+    (taskId: string) => {
+      dispatch(toggleTaskStatus(taskId));
+    },
+    [dispatch]
+  );
+
+  const handleEditTask = useCallback(
+    (taskId: string, newTaskName: string) => {
+      dispatch(editTask({ taskId, newTaskName }));
+    },
+    [dispatch]
+  );
+
+  const handleReorderTask = useCallback(
+    (currentTaskId: string, overTaskId: string, direction: 'up' | 'down') => {
+      dispatch(
+        reorderTask({
+          direction,
+          overTaskId,
+          currentTaskId
+        })
+      );
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     if (!isInitialized) {

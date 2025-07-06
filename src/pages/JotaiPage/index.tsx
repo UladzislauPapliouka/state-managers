@@ -4,7 +4,7 @@ import { v1 } from 'uuid';
 import { TaskComponent, TaskType } from '../../entities/Task';
 import { Task } from '@/entities/Task/types.ts';
 import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { toaster } from '@/shared/ui/toaster';
 
 const todosAtom = atom<TaskType[]>([]);
@@ -12,45 +12,70 @@ const todosAtom = atom<TaskType[]>([]);
 export const JotaiPage = () => {
   const [tasks, setTodos] = useAtom(todosAtom);
 
-  const handleAddTask = (taskName: string) =>
-    setTodos([...tasks, { id: v1(), name: taskName, isDone: false }]);
-  const handelDeleteTask = (taskId: string) =>
-    setTodos(tasks.filter(({ id }) => id !== taskId));
-  const handleDone = (taskId: string) =>
-    setTodos(
-      tasks.map((task) => {
-        if (task.id === taskId) {
-          const newTask = { ...task };
-          newTask.isDone = !newTask.isDone;
-          return newTask;
-        }
-        return task;
-      })
-    );
-  const handleReorder = (
-    currentTaskId: string,
-    overTaskId: string,
-    direction: 'up' | 'down'
-  ) => {
-    let finalTasks: Task[] = [];
-    const currentTask = tasks.find((el) => el.id === currentTaskId) as Task;
-    finalTasks = tasks.filter((el) => el.id !== currentTaskId);
-    console.log(finalTasks);
-    const overTaskIndex = finalTasks.findIndex((el) => el.id === overTaskId);
-    console.log(direction);
-    const result =
-      direction === 'up'
-        ? finalTasks
-            .slice(0, overTaskIndex)
-            .concat(currentTask)
-            .concat(finalTasks.slice(overTaskIndex, finalTasks.length))
-        : finalTasks
-            .slice(0, overTaskIndex + 1)
-            .concat(currentTask)
-            .concat(finalTasks.slice(overTaskIndex + 1));
-    console.log(result);
-    setTodos(result);
-  };
+  const handleAddTask = useCallback(
+    (taskName: string) =>
+      setTodos((tasks) => [
+        ...tasks,
+        { id: v1(), name: taskName, isDone: false }
+      ]),
+    [setTodos]
+  );
+  const handelDeleteTask = useCallback(
+    (taskId: string) =>
+      setTodos((tasks) => tasks.filter(({ id }) => id !== taskId)),
+    [setTodos]
+  );
+  const handleDone = useCallback(
+    (taskId: string) =>
+      setTodos((tasks) =>
+        tasks.map((task) => {
+          if (task.id === taskId) {
+            const newTask = { ...task };
+            newTask.isDone = !newTask.isDone;
+            return newTask;
+          }
+          return task;
+        })
+      ),
+    [setTodos]
+  );
+  const handleReorder = useCallback(
+    (currentTaskId: string, overTaskId: string, direction: 'up' | 'down') => {
+      setTodos((tasks) => {
+        let finalTasks: Task[] = [];
+        const currentTask = tasks.find((el) => el.id === currentTaskId) as Task;
+        finalTasks = tasks.filter((el) => el.id !== currentTaskId);
+        console.log(finalTasks);
+        const overTaskIndex = finalTasks.findIndex(
+          (el) => el.id === overTaskId
+        );
+        console.log(direction);
+        const result =
+          direction === 'up'
+            ? finalTasks
+                .slice(0, overTaskIndex)
+                .concat(currentTask)
+                .concat(finalTasks.slice(overTaskIndex, finalTasks.length))
+            : finalTasks
+                .slice(0, overTaskIndex + 1)
+                .concat(currentTask)
+                .concat(finalTasks.slice(overTaskIndex + 1));
+        console.log(result);
+        return result;
+      });
+    },
+    [setTodos]
+  );
+  const handleEditTask = useCallback(
+    (taskId: string, newTaskName: string) => {
+      setTodos((tasks) =>
+        tasks.map((task) =>
+          task.id === taskId ? { ...task, name: newTaskName } : task
+        )
+      );
+    },
+    [setTodos]
+  );
   useEffect(() => {
     const abortController = new AbortController();
     const fetchTodos = async () => {
@@ -80,6 +105,7 @@ export const JotaiPage = () => {
           task={task}
           onDelete={onDelete}
           onDone={onDone}
+          onEdit={handleEditTask}
           key={key}
         />
       )}

@@ -1,18 +1,9 @@
-import { VStack, Input, Kbd, Flex } from '@chakra-ui/react';
+import { VStack, Flex } from '@chakra-ui/react';
 import { PageOutletLayout } from '@/shared/ui/PageOutletLayout';
-import { InputGroup } from '@/shared/ui/input-group.tsx';
 import { TaskType } from '@/entities/Task';
-import { ReactNode, useState } from 'react';
-import { DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
-import {
-  SortableContext,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable';
-import {
-  restrictToParentElement,
-  restrictToVerticalAxis,
-  restrictToWindowEdges
-} from '@dnd-kit/modifiers';
+import { ReactNode } from 'react';
+
+import { AddTaskInput } from '@/entities/AddTaskInput';
 
 type Props = {
   tasks: TaskType[];
@@ -36,17 +27,16 @@ export const BaseTodoPage = ({
   onDelete,
   onDone,
   tasks,
-  renderToDo,
-  onTaskReorder
+  renderToDo
+  // onTaskReorder
 }: Props) => {
   console.log(tasks);
-  const [newTaskName, setNewTaskName] = useState('');
-  const pointerSensor = useSensor(PointerSensor, {
-    activationConstraint: {
-      delay: 300,
-      tolerance: 10
-    }
-  });
+  // const pointerSensor = useSensor(PointerSensor, {
+  //   activationConstraint: {
+  //     delay: 300,
+  //     tolerance: 10
+  //   }
+  // });
   return (
     <PageOutletLayout>
       <VStack
@@ -56,21 +46,7 @@ export const BaseTodoPage = ({
         paddingTop={'10'}
         paddingBottom={'10'}
       >
-        <InputGroup w={400} endElement={<Kbd>Enter</Kbd>}>
-          <Input
-            value={newTaskName}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                onAdd(newTaskName);
-                setNewTaskName('');
-              }
-            }}
-            onChange={(event) => {
-              setNewTaskName(event.currentTarget.value);
-            }}
-            placeholder="Task name..."
-          />
-        </InputGroup>
+        <AddTaskInput onAdd={onAdd} />
         <Flex
           flex={'1'}
           gap={'2'}
@@ -81,7 +57,7 @@ export const BaseTodoPage = ({
           overflowY={'auto'}
           overflowX={'hidden'}
         >
-          <DndContext
+          {/* <DndContext
             onDragEnd={(event) => {
               console.log(event);
               onTaskReorder(
@@ -100,10 +76,10 @@ export const BaseTodoPage = ({
             <SortableContext
               strategy={verticalListSortingStrategy}
               items={tasks.map((task) => task.id)}
-            >
-              {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
-            </SortableContext>
-          </DndContext>
+            > */}
+          {tasks.map((task) => renderToDo(task, onDelete, onDone, task.id))}
+          {/* </SortableContext>
+          </DndContext> */}
         </Flex>
       </VStack>
     </PageOutletLayout>

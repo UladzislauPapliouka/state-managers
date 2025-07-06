@@ -8,7 +8,8 @@ import {
   KeyboardEventHandler,
   SyntheticEvent,
   useEffect,
-  useState
+  useState,
+  memo
 } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 
@@ -18,7 +19,12 @@ type Props = {
   onEdit: (id: string, newName: string) => void;
   task: TaskType;
 };
-export const Task = ({ task, onDelete, onDone, onEdit }: Props) => {
+export const Task = memo(function Task({
+  task,
+  onDelete,
+  onDone,
+  onEdit
+}: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [newTaskName, setNewTaskName] = useState(task.name);
   const handleTaskRename = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -48,6 +54,7 @@ export const Task = ({ task, onDelete, onDone, onEdit }: Props) => {
     : null;
   return (
     <HStack
+      key={task.id}
       borderWidth={1}
       borderStyle={'solid'}
       borderColor={'gray.700'}
@@ -97,4 +104,4 @@ export const Task = ({ task, onDelete, onDone, onEdit }: Props) => {
       </ButtonGroup>
     </HStack>
   );
-};
+});
