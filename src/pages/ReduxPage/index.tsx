@@ -4,8 +4,7 @@ import {
   deleteTask,
   toggleTaskStatus,
   editTask,
-  reorderTask,
-  fetchTodos
+  reorderTask
 } from '@/pages/ReduxPage/stores/redux/slices/todos';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
@@ -18,6 +17,7 @@ export const ReduxPage = () => {
   const isInitialized = useAppSelector((state) => state.tasks.isInitialized);
   const hasError = useAppSelector((state) => state.tasks.hasError);
   const dispatch = useAppDispatch();
+
   const handleAddTask = useCallback(
     (newTaskName: string) => {
       dispatch(addTask(newTaskName));
@@ -61,24 +61,24 @@ export const ReduxPage = () => {
 
   useEffect(() => {
     if (!isInitialized) {
-      const promise = dispatch(fetchTodos());
+      // const promise = dispatch(fetchTodos());
       return () => {
-        promise.abort();
+        // promise.abort();
       };
     }
   }, [dispatch, isInitialized]);
-  useEffect(() => {
-    if (isInitialized && status === 'succeeded') {
-      toaster.create({ type: 'success', title: 'Todos fetched' });
-    }
-  }, [status, isInitialized]);
 
-  // Обработка ошибок загрузки
   useEffect(() => {
-    if (hasError && status === 'failed') {
-      toaster.create({ type: 'error', title: 'Failed to fetch todos' });
+    if (isInitialized) {
+      if (status === 'succeeded') {
+        toaster.create({ type: 'success', title: 'Todos fetched' });
+      }
+      if (status === 'failed') {
+        toaster.create({ type: 'error', title: 'Failed to fetch todos' });
+      }
     }
-  }, [status, hasError]);
+  }, [status, isInitialized, hasError]);
+
   return (
     <BaseTodoPage
       tasks={tasks}

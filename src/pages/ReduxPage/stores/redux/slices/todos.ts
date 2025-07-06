@@ -1,7 +1,8 @@
 import { Task } from '@/entities/Task/types';
-import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v1 } from 'uuid';
+import { fetchTodos } from './thunk';
 
 interface TodoListState {
   tasks: Task[];
@@ -9,6 +10,7 @@ interface TodoListState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   isInitialized: boolean;
 }
+
 const initialState: TodoListState = {
   tasks: [],
   hasError: false,
@@ -16,63 +18,34 @@ const initialState: TodoListState = {
   isInitialized: false
 };
 
-export const fetchTodos = createAsyncThunk(
-  'todos/fetchTodos',
-  async (_, { signal }) => {
-    const response = await dummyJsonApi.getTodos({
-      signal: signal
-    });
-    return response.map(convertTodoItemToTask);
-  }
-);
-
 export const TodosSlice = createSlice({
   initialState,
   name: 'todos',
   reducers: {
     addTask: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        tasks: [
-          ...state.tasks,
-          {
-            id: v1(),
-            name: action.payload,
-            isDone: false
-          }
-        ]
+      const newTask: Task = {
+        id: v1(),
+        name: action.payload,
+        isDone: false
       };
+
+      state.tasks.push(newTask);
     },
     deleteTask: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        tasks: state.tasks.filter(({ id }) => id !== action.payload)
-      };
+      state.tasks = state.tasks.filter(({ id }) => id !== action.payload);
     },
     toggleTaskStatus: (state, action: PayloadAction<string>) => {
-      const newTasks = state.tasks.map((task) => {
-        if (action.payload === task.id) {
-          const newTask = { ...task };
-          newTask.isDone = !newTask.isDone;
-
-          return newTask;
-        }
-        return task;
-      });
-
-      return { ...state, tasks: newTasks };
+      const task = state.tasks.find(({ id }) => id === action.payload);
+      if (!task) return state;
+      task.isDone = !task.isDone;
     },
     editTask: (
       state,
       action: PayloadAction<{ taskId: string; newTaskName: string }>
     ) => {
-      const newTasks = state.tasks.map((task) => {
-        if (action.payload.taskId === task.id) {
-          return { ...task, name: action.payload.newTaskName };
-        }
-        return task;
-      });
-      return { ...state, tasks: newTasks };
+      const task = state.tasks.find(({ id }) => id === action.payload.taskId);
+      if (!task) return state;
+      task.name = action.payload.newTaskName;
     },
     reorderTask: (
       state,
@@ -82,50 +55,47 @@ export const TodosSlice = createSlice({
         direction: 'up' | 'down';
       }>
     ) => {
-      const tasks = state.tasks;
-      let finalTasks: Task[] = [];
-      const currentTask = tasks.find(
+      const currentTask = state.tasks.find(
         (el) => el.id === action.payload.currentTaskId
-      ) as Task;
-      finalTasks = tasks.filter((el) => el.id !== action.payload.currentTaskId);
-      console.log(finalTasks);
+      );
+      if (!currentTask) return state;
+
+      const finalTasks = state.tasks.filter(
+        (el) => el.id !== action.payload.currentTaskId
+      );
+
       const overTaskIndex = finalTasks.findIndex(
         (el) => el.id === action.payload.overTaskId
       );
-      console.log(action.payload.direction);
-      const result =
-        action.payload.direction === 'up'
-          ? finalTasks
-              .slice(0, overTaskIndex)
-              .concat(currentTask)
-              .concat(finalTasks.slice(overTaskIndex, finalTasks.length))
-          : finalTasks
-              .slice(0, overTaskIndex + 1)
-              .concat(currentTask)
-              .concat(finalTasks.slice(overTaskIndex + 1));
-      console.log(result);
-      return { ...state, tasks: result };
+
+      const insertIndex =
+        action.payload.direction === 'up' ? overTaskIndex : overTaskIndex + 1;
+
+      state.tasks = finalTasks
+        .slice(0, insertIndex)
+        .concat(currentTask)
+        .concat(finalTasks.slice(insertIndex, finalTasks.length));
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchTodos.fulfilled, (state, action) => {
-        return {
-          ...state,
-          tasks: action.payload,
-          status: 'succeeded',
-          isInitialized: true
-        };
+        state.tasks = action.payload;
+        state.status = 'succeeded';
+        state.hasError = false;
+        state.isInitialized = true;
       })
       .addCase(fetchTodos.pending, (state) => {
-        return { ...state, status: 'loading' };
+        state.status = 'loading';
+        state.hasError = false;
       })
       .addCase(fetchTodos.rejected, (state, action) => {
-        // Не обновляем состояние если запрос был отменен
         if (action.meta.aborted) {
           return state;
         }
-        return { ...state, status: 'failed', hasError: true };
+        state.isInitialized = true;
+        state.status = 'failed';
+        state.hasError = true;
       });
   }
 });
