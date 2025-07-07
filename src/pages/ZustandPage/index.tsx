@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { v1 } from 'uuid';
 import { TaskComponent, TaskType } from '@/entities/Task';
-import { Task } from '@/entities/Task/types.ts';
 import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
 import { useEffect } from 'react';
 import { toaster } from '@/shared/ui/toaster';
@@ -42,17 +41,20 @@ const useStore = create<TodoStore>()((set, get) => ({
 
     try {
       const todosData = await dummyJsonApi.getTodos({
-        signal: newController.signal
+        signal: newController.signal,
+        userId: 1
       });
       const tasks = todosData.map(convertTodoItemToTask);
       set({
         todos: tasks,
         status: 'success',
         isInitialized: true,
+        hasError: false,
         abortController: null
       });
       toaster.create({ type: 'success', title: 'Todos fetched' });
     } catch (error) {
+      console.log('TTTTTTTTTTTTTTTT', error);
       if (error instanceof Error && error.name === 'CanceledError') {
         return;
       }

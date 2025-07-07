@@ -24,10 +24,19 @@ export const convertTodoItemToTask = (todoItem: TodoItem): Task => ({
 });
 
 export const dummyJsonApi = {
-  getTodos: async ({ signal }: { signal?: AbortSignal }) => {
-    const data = await dummyJsonAxiosInstance.get<TodosResponse>('/todos', {
-      signal
-    });
+  getTodos: async ({
+    signal,
+    userId = 10
+  }: {
+    signal: AbortSignal;
+    userId?: number;
+  }) => {
+    const data = await dummyJsonAxiosInstance.get<TodosResponse>(
+      `/users/${userId}/todos`,
+      {
+        signal
+      }
+    );
     return data.data.todos;
   },
   addTodo: (todo: Task) => dummyJsonAxiosInstance.post('/todos', todo),

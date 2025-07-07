@@ -10,6 +10,8 @@ import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
 import { useCallback, useEffect } from 'react';
 import { toaster } from '@/shared/ui/toaster';
+import { useAuthContext } from '@/features/AuthContext';
+import { fetchTodos } from './stores/redux/slices/thunk';
 
 export const ReduxPage = () => {
   const tasks = useAppSelector((state) => state.tasks.tasks);
@@ -17,6 +19,7 @@ export const ReduxPage = () => {
   const isInitialized = useAppSelector((state) => state.tasks.isInitialized);
   const hasError = useAppSelector((state) => state.tasks.hasError);
   const dispatch = useAppDispatch();
+  const { user } = useAuthContext();
 
   const handleAddTask = useCallback(
     (newTaskName: string) => {
@@ -60,13 +63,13 @@ export const ReduxPage = () => {
   );
 
   useEffect(() => {
-    if (!isInitialized) {
-      // const promise = dispatch(fetchTodos());
+    if (!isInitialized && user) {
+      const promise = dispatch(fetchTodos({ userId: user!.id }));
       return () => {
-        // promise.abort();
+        promise.abort();
       };
     }
-  }, [dispatch, isInitialized]);
+  }, [dispatch, isInitialized, user]);
 
   useEffect(() => {
     if (isInitialized) {

@@ -56,8 +56,8 @@ export class Todos {
       }
     });
   };
-  fetchTodos = action(async ({ signal }: { signal?: AbortSignal }) => {
-    const todos = await dummyJsonApi.getTodos({ signal });
+  fetchTodos = action(async ({ signal }: { signal: AbortSignal }) => {
+    const todos = await dummyJsonApi.getTodos({ signal, userId: 1 });
     this.todos = todos.map((todo) => {
       const { id, isDone, name } = convertTodoItemToTask(todo);
       return new Task(name, id, isDone);

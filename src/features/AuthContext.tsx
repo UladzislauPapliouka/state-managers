@@ -27,6 +27,9 @@ dummyJsonAxiosInstance.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
+    if (error.name === 'CanceledError') {
+      return Promise.reject(error);
+    }
     if (
       error.response.status === 401 &&
       !originalRequest._retry &&
@@ -94,6 +97,8 @@ interface AuthContext {
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ status: number }>;
   logout: () => void;
+  initialRoute: string;
+  setInitialRoute: (route: string) => void;
 }
 const AuthContext = createContext<AuthContext | null>(null);
 
@@ -108,6 +113,7 @@ export const useAuthContext = () => {
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [initialRoute, setInitialRoute] = useState<string>('');
   const login = useCallback(async (email: string, password: string) => {
     const response = await dummyJsonAuthApi.login(email, password);
     if (response.status === 200) {
@@ -142,7 +148,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   });
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        isAuthenticated,
+        initialRoute,
+        setInitialRoute
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

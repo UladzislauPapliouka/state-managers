@@ -26,6 +26,7 @@ export const LoginPage = () => {
   } = useForm<FormValues>({
     resolver: yupResolver(loginScheme)
   });
+  const { initialRoute } = useAuthContext();
   const { isAuthenticated, login } = useAuthContext();
   const navigate = useNavigate();
   const onSubmit = handleSubmit(async (data) => {
@@ -40,9 +41,9 @@ export const LoginPage = () => {
   });
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/redux');
+      navigate(initialRoute);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, initialRoute]);
 
   return (
     <Center bg="bg.emphasized" h="100vh" w="100vw">

@@ -8,9 +8,15 @@ import { useCallback, useEffect } from 'react';
 import { toaster } from '@/shared/ui/toaster';
 
 const todosAtom = atom<TaskType[]>([]);
+const isInitializedAtom = atom<boolean>(false);
+const statusAtom = atom<'idle' | 'loading' | 'error' | 'success'>('idle');
+const abortControllerAtom = atom<AbortController | null>(null);
 
 export const JotaiPage = () => {
   const [tasks, setTodos] = useAtom(todosAtom);
+  const [isInitialized, setIsInitialized] = useAtom(isInitializedAtom);
+  const [status, setStatus] = useAtom(statusAtom);
+  const [abortController, setAbortController] = useAtom(abortControllerAtom);
 
   const handleAddTask = useCallback(
     (taskName: string) =>
@@ -77,22 +83,37 @@ export const JotaiPage = () => {
     [setTodos]
   );
   useEffect(() => {
-    const abortController = new AbortController();
+    const newAbortController = new AbortController();
     const fetchTodos = async () => {
       const response = await dummyJsonApi.getTodos({
-        signal: abortController.signal
+        signal: newAbortController.signal,
+        userId: 1
       });
       const todos = response.map(convertTodoItemToTask);
       setTodos(todos);
       toaster.create({ type: 'success', title: 'Todos fetched' });
     };
-    if (tasks.length === 0) {
+    if (tasks.length === 0 && !isInitialized) {
       fetchTodos();
     }
     return () => {
-      abortController.abort();
+      newAbortController.abort();
     };
-  }, [tasks, setTodos]);
+  }, [
+    tasks,
+    setTodos,
+    isInitialized,
+    status,
+    abortController,
+    setIsInitialized,
+    setStatus,
+    setAbortController
+  ]);
+  useEffect(() => {
+    if (status === 'success') {
+      setIsInitialized(true);
+    }
+  }, [status, setIsInitialized]);
   return (
     <BaseTodoPage
       tasks={tasks}
