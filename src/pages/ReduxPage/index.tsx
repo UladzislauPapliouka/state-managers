@@ -8,7 +8,7 @@ import {
 } from '@/pages/ReduxPage/stores/redux/slices/todos';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toaster } from '@/shared/ui/toaster';
 import { useAuthContext } from '@/features/AuthContext';
 import { fetchTodos } from './stores/redux/slices/thunk';
@@ -18,6 +18,18 @@ export const ReduxPage = () => {
   const status = useAppSelector((state) => state.tasks.status);
   const isInitialized = useAppSelector((state) => state.tasks.isInitialized);
   const hasError = useAppSelector((state) => state.tasks.hasError);
+  const [filter, setFilter] = useState<string>('all');
+  const filteredTasks = useMemo(() => {
+    return tasks.filter((task) => {
+      if (filter === 'all') {
+        return true;
+      }
+      if (filter === 'active') {
+        return !task.isDone;
+      }
+      return task.isDone;
+    });
+  }, [tasks, filter]);
   const dispatch = useAppDispatch();
   const { user } = useAuthContext();
 
@@ -61,6 +73,9 @@ export const ReduxPage = () => {
     },
     [dispatch]
   );
+  const filterTask = useCallback((filter: string) => {
+    setFilter(filter);
+  }, []);
 
   useEffect(() => {
     if (!isInitialized && user) {
@@ -84,11 +99,13 @@ export const ReduxPage = () => {
 
   return (
     <BaseTodoPage
-      tasks={tasks}
+      tasks={filteredTasks}
       onAdd={handleAddTask}
       onDelete={handleDeleteTask}
       onDone={handleToggleTaskStatus}
       onTaskReorder={handleReorderTask}
+      filterTask={filterTask}
+      filter={filter}
       renderToDo={(task, onDelete, onDone, key) => (
         <TaskComponent
           task={task}

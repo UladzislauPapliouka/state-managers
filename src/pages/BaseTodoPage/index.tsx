@@ -4,6 +4,7 @@ import { TaskType } from '@/entities/Task';
 import { ReactNode } from 'react';
 
 import { AddTaskInput } from '@/entities/AddTaskInput';
+import { TaskFilters } from '@/entities/TaskFiltes';
 
 type Props = {
   tasks: TaskType[];
@@ -21,13 +22,19 @@ type Props = {
     overTaskId: string,
     direction: 'up' | 'down'
   ) => void;
+  filterTask?: (filter: string) => void;
+  filter?: string;
 };
 export const BaseTodoPage = ({
   onAdd,
   onDelete,
   onDone,
   tasks,
-  renderToDo
+  renderToDo,
+  filter,
+  filterTask = (filter: string) => {
+    console.log(filter);
+  }
   // onTaskReorder
 }: Props) => {
   // const pointerSensor = useSensor(PointerSensor, {
@@ -38,13 +45,10 @@ export const BaseTodoPage = ({
   // });
   return (
     <PageOutletLayout>
-      <VStack
-        w={'500px'}
-        height={'100%'}
-        gap={'10'}
-        paddingTop={'10'}
-        paddingBottom={'10'}
-      >
+      <VStack justifyContent={'flex-start'}>
+        <TaskFilters filterTask={filterTask} filter={filter || 'all'} />
+      </VStack>
+      <VStack w={'500px'} height={'100%'} gap={'10'}>
         <AddTaskInput onAdd={onAdd} />
         <Flex
           flex={'1'}
@@ -80,6 +84,9 @@ export const BaseTodoPage = ({
           {/* </SortableContext>
           </DndContext> */}
         </Flex>
+      </VStack>
+      <VStack>
+        <AddTaskInput onAdd={onAdd} />
       </VStack>
     </PageOutletLayout>
   );
