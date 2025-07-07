@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 const loginScheme = yup.object().shape({
-  email: yup.string().email().required(),
+  email: yup.string().required(),
   password: yup.string().required()
 });
 interface FormValues {
