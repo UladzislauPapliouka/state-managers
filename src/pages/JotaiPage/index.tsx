@@ -51,11 +51,11 @@ export const JotaiPage = () => {
         let finalTasks: Task[] = [];
         const currentTask = tasks.find((el) => el.id === currentTaskId) as Task;
         finalTasks = tasks.filter((el) => el.id !== currentTaskId);
-        console.log(finalTasks);
+
         const overTaskIndex = finalTasks.findIndex(
           (el) => el.id === overTaskId
         );
-        console.log(direction);
+
         const result =
           direction === 'up'
             ? finalTasks
@@ -66,7 +66,7 @@ export const JotaiPage = () => {
                 .slice(0, overTaskIndex + 1)
                 .concat(currentTask)
                 .concat(finalTasks.slice(overTaskIndex + 1));
-        console.log(result);
+
         return result;
       });
     },

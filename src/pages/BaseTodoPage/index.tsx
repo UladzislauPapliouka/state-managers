@@ -30,7 +30,6 @@ export const BaseTodoPage = ({
   renderToDo
   // onTaskReorder
 }: Props) => {
-  console.log(tasks);
   // const pointerSensor = useSensor(PointerSensor, {
   //   activationConstraint: {
   //     delay: 300,
@@ -59,7 +58,7 @@ export const BaseTodoPage = ({
         >
           {/* <DndContext
             onDragEnd={(event) => {
-              console.log(event);
+
               onTaskReorder(
                 event.active.id as string,
                 event.over?.id as string,

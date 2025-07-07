@@ -136,7 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const accessToken = cookies
         .find((cookie) => cookie.includes('accessToken'))
         ?.split('=')[1];
-      console.log(cookies);
+
       if (accessToken) {
         dummyJsonAuthApi.getMe(accessToken).then((response) => {
           if (response.status === 200) {

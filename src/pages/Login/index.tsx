@@ -6,6 +6,8 @@ import * as yup from 'yup';
 import { useAuthContext } from '@/features/AuthContext.tsx';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { toaster } from '@/shared/ui/toaster';
+import { log } from 'console';
 
 const loginScheme = yup.object().shape({
   email: yup.string().required(),
@@ -26,22 +28,19 @@ export const LoginPage = () => {
   } = useForm<FormValues>({
     resolver: yupResolver(loginScheme)
   });
-  const { initialRoute } = useAuthContext();
+  const { initialRoute, setInitialRoute } = useAuthContext();
   const { isAuthenticated, login } = useAuthContext();
   const navigate = useNavigate();
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      const { status } = await login(data.email, data.password);
-      if (status === 401) {
-        setError('root', { message: 'Неверный логин или пароль' });
-      }
-    } catch (error) {
-      console.log(error);
+    const { status } = await login(data.email, data.password);
+    if (status === 401) {
+      setError('root', { message: 'Неверный логин или пароль' });
     }
   });
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate(initialRoute);
+    if (isAuthenticated && initialRoute) {
+      navigate(initialRoute, { replace: true });
+      setInitialRoute('');
     }
   }, [isAuthenticated, navigate, initialRoute]);
 

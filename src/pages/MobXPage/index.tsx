@@ -16,7 +16,6 @@ class Task {
       isDone: observable,
       toggleStatus: action
     });
-    console.log(`new task name: ${name}`);
 
     this.name = name;
     this.id = id;
@@ -74,9 +73,9 @@ export class Todos {
       (el) => el.id === currentTaskId
     ) as Task;
     finalTasks = this.todos.filter((el) => el.id !== currentTaskId);
-    console.log(finalTasks);
+
     const overTaskIndex = finalTasks.findIndex((el) => el.id === overTaskId);
-    console.log(direction);
+
     const result =
       direction === 'up'
         ? finalTasks
@@ -87,7 +86,6 @@ export class Todos {
             .slice(0, overTaskIndex + 1)
             .concat(currentTask)
             .concat(finalTasks.slice(overTaskIndex + 1));
-    console.log(result);
     this.todos = result;
   };
 }
@@ -113,8 +111,6 @@ const ObservableTask = observer(
   )
 );
 export const MobXPage = observer(({ store }: { store: Todos }) => {
-  console.log(store.todos);
-
   return (
     <BaseTodoPage
       tasks={store.todos}

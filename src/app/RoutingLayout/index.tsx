@@ -5,7 +5,6 @@ import { NavLink, Outlet, useLocation } from 'react-router';
 
 export function RoutingLayout() {
   const location = useLocation();
-  console.log(location);
   return (
     <>
       <Center bg="bg.emphasized" h="10vh" w="100vw">

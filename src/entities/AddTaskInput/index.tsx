@@ -52,7 +52,7 @@ export const AddTaskInput = ({
     <Field.Root h={70} w={400} invalid={!!error}>
       <Box position="relative" w={'100%'}>
         <InputGroup w={'100%'} endElement={<Kbd>Enter</Kbd>}>
-          <>
+          <div style={{ width: '100%' }}>
             <Input
               className="peer"
               value={newTaskName}
@@ -71,7 +71,7 @@ export const AddTaskInput = ({
               placeholder=""
             />
             <Field.Label css={floatingStyles}>Task name...</Field.Label>
-          </>
+          </div>
         </InputGroup>
         {error && <Field.ErrorText>{error}</Field.ErrorText>}
       </Box>

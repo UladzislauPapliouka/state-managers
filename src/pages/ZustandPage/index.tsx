@@ -54,7 +54,6 @@ const useStore = create<TodoStore>()((set, get) => ({
       });
       toaster.create({ type: 'success', title: 'Todos fetched' });
     } catch (error) {
-      console.log('TTTTTTTTTTTTTTTT', error);
       if (error instanceof Error && error.name === 'CanceledError') {
         return;
       }

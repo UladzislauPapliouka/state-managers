@@ -8,7 +8,9 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
   const location = useLocation();
   const { setInitialRoute } = useAuthContext();
   const from = location.pathname;
-  setInitialRoute(from);
+  useEffect(() => {
+    setInitialRoute(from);
+  }, [from, setInitialRoute]);
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login', { replace: true });
