@@ -1,6 +1,6 @@
 import { InputGroup } from '@/shared/ui/input-group.tsx';
 import { Box, Field, Input, Kbd, defineStyle } from '@chakra-ui/react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import * as z from 'zod/v3';
 
 const floatingStyles = defineStyle({
@@ -29,11 +29,11 @@ const userSchema = z
   .min(3, 'Task name must be at least 3 characters')
   .nonempty('Task name is required');
 
-export const AddTaskInput = ({
+export const AddTaskInput = memo(function AddTaskInput({
   onAdd
 }: {
   onAdd: (taskName: string) => void;
-}) => {
+}) {
   const [newTaskName, setNewTaskName] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -77,4 +77,4 @@ export const AddTaskInput = ({
       </Box>
     </Field.Root>
   );
-};
+});
