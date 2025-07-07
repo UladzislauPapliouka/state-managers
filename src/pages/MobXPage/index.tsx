@@ -94,18 +94,16 @@ const ObservableTask = observer(
   ({
     task,
     onDelete,
-    onDone,
-    key
+    onDone
   }: {
     task: TaskType;
     onDelete: (id: string) => void;
     onDone: (id: string) => void;
-    key: string;
   }) => (
     <TaskComponent
       onDelete={onDelete}
       onDone={onDone}
-      key={key}
+      key={task.id}
       task={{ id: task.id, name: task.name, isDone: task.isDone }}
     />
   )
@@ -118,12 +116,12 @@ export const MobXPage = observer(({ store }: { store: Todos }) => {
       onDelete={store.deleteTodo}
       onDone={store.toggleStatus}
       onTaskReorder={store.reorderTodos}
-      renderToDo={(task, onDelete, onDone, key) => (
+      renderToDo={(task, onDelete, onDone, keyProp) => (
         <ObservableTask
           task={task}
           onDelete={onDelete}
           onDone={onDone}
-          key={key}
+          key={task.id}
         />
       )}
     />
