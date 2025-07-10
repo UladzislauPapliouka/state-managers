@@ -5,6 +5,7 @@ import { ReactNode } from 'react';
 
 import { AddTaskInput } from '@/entities/AddTaskInput';
 import { TaskFilters } from '@/entities/TaskFiltes';
+import { TaskPagination } from '@/features/Pagination';
 
 type Props = {
   tasks: TaskType[];
@@ -24,6 +25,8 @@ type Props = {
   ) => void;
   filterTask?: (filter: string) => void;
   filter?: string;
+  handleChangePage?: (page: number) => void;
+  allTodosLength?: number;
 };
 export const BaseTodoPage = ({
   onAdd,
@@ -34,7 +37,11 @@ export const BaseTodoPage = ({
   filter,
   filterTask = (filter: string) => {
     console.log(filter);
-  }
+  },
+  handleChangePage = (v) => {
+    console.log(v);
+  },
+  allTodosLength = 0
   // onTaskReorder
 }: Props) => {
   // const pointerSensor = useSensor(PointerSensor, {
@@ -86,7 +93,10 @@ export const BaseTodoPage = ({
         </Flex>
       </VStack>
       <VStack>
-        <AddTaskInput onAdd={onAdd} />
+        <TaskPagination
+          todosLength={allTodosLength}
+          handleChangePage={handleChangePage}
+        />
       </VStack>
     </PageOutletLayout>
   );

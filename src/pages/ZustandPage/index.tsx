@@ -3,7 +3,7 @@ import { BaseTodoPage } from '../BaseTodoPage';
 import { v1 } from 'uuid';
 import { TaskComponent, TaskType } from '@/entities/Task';
 import { convertTodoItemToTask, dummyJsonApi } from '@/features/TodoList/api';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toaster } from '@/shared/ui/toaster';
 
 interface TodoStore {
@@ -11,6 +11,7 @@ interface TodoStore {
   isInitialized: boolean;
   hasError: boolean;
   status: 'idle' | 'loading' | 'error' | 'success';
+
   addTodo: (newTaskName: string) => void;
   deleteTodo: (taskId: string) => void;
   toggleStatus: (taskId: string) => void;
@@ -130,7 +131,12 @@ export const ZustandPage = () => {
     editTodo,
     fetchTodos
   } = useStore((state) => state);
-
+  const [page, setPage] = useState(1);
+  const handleChangePage = (page: number) => {
+    setPage(page);
+  };
+  const paginatedTodos = todos.slice((page - 1) * 2, page * 2);
+  console.log(paginatedTodos);
   useEffect(() => {
     if (!isInitialized) {
       fetchTodos();
@@ -142,11 +148,13 @@ export const ZustandPage = () => {
 
   return (
     <BaseTodoPage
-      tasks={todos}
+      tasks={paginatedTodos}
       onAdd={addTodo}
       onDelete={deleteTodo}
       onDone={toggleStatus}
       onTaskReorder={reorderTask}
+      handleChangePage={handleChangePage}
+      allTodosLength={todos.length}
       renderToDo={(task, onDelete, onDone, key) => (
         <TaskComponent
           task={task}
