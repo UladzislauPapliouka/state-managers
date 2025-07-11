@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import TodoReducer from './slices/todos';
+import TodoReducer from './slices/tasks';
 
 export const ReduxStore = configureStore({
   reducer: {
@@ -10,5 +10,6 @@ export const ReduxStore = configureStore({
 
 type AppState = ReturnType<typeof ReduxStore.getState>;
 type AppDispatch = typeof ReduxStore.dispatch;
+
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<AppState>();

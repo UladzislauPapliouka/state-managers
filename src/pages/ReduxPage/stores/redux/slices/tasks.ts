@@ -18,9 +18,9 @@ const initialState: TodoListState = {
   isInitialized: false
 };
 
-export const TodosSlice = createSlice({
+export const TasksSlice = createSlice({
   initialState,
-  name: 'todos',
+  name: 'tasks',
   reducers: {
     addTask: (state, action: PayloadAction<string>) => {
       const newTask: Task = {
@@ -101,5 +101,5 @@ export const TodosSlice = createSlice({
 });
 
 export const { addTask, deleteTask, toggleTaskStatus, editTask, reorderTask } =
-  TodosSlice.actions;
-export default TodosSlice.reducer;
+  TasksSlice.actions;
+export default TasksSlice.reducer;

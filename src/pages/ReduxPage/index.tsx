@@ -5,7 +5,7 @@ import {
   toggleTaskStatus,
   editTask,
   reorderTask
-} from '@/pages/ReduxPage/stores/redux/slices/todos';
+} from '@/pages/ReduxPage/stores/redux/slices/tasks';
 import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
 import { useCallback, useEffect, useMemo, useState } from 'react';
