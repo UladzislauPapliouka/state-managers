@@ -5,7 +5,7 @@ import { RoutingLayout } from './RoutingLayout';
 import { Provider as ChakraUIProvider } from '@/shared/ui/provider.tsx';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { PROTECTED_ROUTES, PUBLIC_ROUTES } from '@/shared/constants/routes.tsx';
-import { AuthProvider } from '@/features/AuthContext.tsx';
+import { AuthProvider } from '@/features/Authorization/AuthContext';
 import { Toaster } from '@/shared/ui/toaster';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/shared/api';

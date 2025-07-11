@@ -10,7 +10,7 @@ import { BaseTodoPage } from '../BaseTodoPage';
 import { TaskComponent } from '@/entities/Task';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { toaster } from '@/shared/ui/toaster';
-import { useAuthContext } from '@/features/AuthContext';
+import { useAuthContext } from '@/features/Authorization/auth-context';
 import { fetchTodos } from './stores/redux/slices/thunk';
 
 export const ReduxPage = () => {
