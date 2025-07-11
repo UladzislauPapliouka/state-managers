@@ -22,8 +22,6 @@ export const TaskPagination = ({
         <Pagination.Context>
           {({ pages }) =>
             pages.map((page, index) => {
-              console.log(page);
-
               return page.type === 'page' ? (
                 <Pagination.Item
                   onClick={() => handleChangePage(page.value)}
